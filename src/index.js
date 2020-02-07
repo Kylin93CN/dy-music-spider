@@ -28,6 +28,7 @@ function downloadFile(url, fileName, cb) {
   let ua = ramdomUA.getRandom();
   await page.setViewport({ width: 1280, height: 800 });
   await page.setUserAgent(ua);
+  // u can change the url
   await page.goto('http://www.douyingequ.com/douyinshenqu.htm ');
 
   await page.screenshot({
