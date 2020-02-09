@@ -3,7 +3,7 @@
 git clone git@github.com:Kylin93CN/dy-music-spider.git
 cd dy-music-spider
 npm install
-node src/index.js
+node index.js
 ```
 # page list
 
