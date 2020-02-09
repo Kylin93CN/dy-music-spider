@@ -10,17 +10,11 @@
  */
 
 const path = require('path');
-const fs = require('fs');
 
-const request = require('request');
 const puppeteer = require('puppeteer');
-
 const ramdomUA = require('random-fake-useragent');
 
-function downloadFile(url, fileName, cb) {
-  const stream = fs.createWriteStream(fileName);
-  request(url).pipe(stream).on('close',cb);
-}
+const download = require('./utils/download');
 
 (async () => {
   const browser = await puppeteer.launch();
@@ -29,10 +23,10 @@ function downloadFile(url, fileName, cb) {
   await page.setViewport({ width: 1280, height: 800 });
   await page.setUserAgent(ua);
   // u can change the url
-  await page.goto('http://www.douyingequ.com/douyinshenqu.htm ');
+  await page.goto('http://www.douyingequ.com/douyinshenqu.htm');
 
   await page.screenshot({
-    path: path.resolve(__dirname,'snapshot/bb.png'),
+    path: path.resolve(__dirname,`snapshot/${Date.now()}.png`),
     fullPage: true,
   });
 
@@ -46,7 +40,7 @@ function downloadFile(url, fileName, cb) {
   console.log('musicUrlList的长度---->', musicUrlList.length);
 
   // 遍历访问每个url获取音乐的下载地址
-  for (let index = 48; index < musicUrlList.length; index += 1) {
+  for (let index = 0; index < musicUrlList.length; index += 1) {
     const musicUr = musicUrlList[index];
     // 新开一个页面
     const musicPage = await browser.newPage();
@@ -66,7 +60,7 @@ function downloadFile(url, fileName, cb) {
     await musicPage.close();
     // 下载
     if (!url) continue;
-    downloadFile(url, path.resolve(__dirname, 'music/', `${songName}-${singer}${ext}`), () => {
+    download(url, path.resolve(__dirname, 'music/', `${songName}-${singer}${ext}`), () => {
       console.log(`第${index + 1}首歌曲----${songName}-----下载完毕！剩余${musicUrlList.length - index - 1}首`);
     });
   }
